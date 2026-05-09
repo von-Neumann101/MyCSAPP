@@ -153,7 +153,7 @@ int bitXor(int x, int y) {
  */
 int tmin(void) {
 
-  return 2 << 31;
+  return 1 << 31;
 
 }
 //2
@@ -177,7 +177,7 @@ int isTmax(int x) {
  *   Rating: 2
  */
 int allOddBits(int x) {
-  return !((x >> 1) ^ ~x);
+  return !(((x >> 1) | x) + 1);
 }
 /* 
  * negate - return -x 
@@ -254,23 +254,23 @@ int logicalNeg(int x) {
 int howManyBits(int x) {
   int y = x ^ (x >> 31);
   
-  int move1 = !!(y >> 16) << 4;
-  y = y >> move1;
+  int shift1 = !!(y >> 16) << 4;
+  y = y >> shift1;
 
-  int move2 = !!(y >> 8) << 3;
-  y = y >> move2;
+  int shift2 = !!(y >> 8) << 3;
+  y = y >> shift2;
 
-  int move3 = !!(y >> 4) << 2;
-  y = y >> move3;
+  int shift3 = !!(y >> 4) << 2;
+  y = y >> shift3;
 
-  int move4 = !!(y >> 2) << 1;
-  y = y >> move4;
+  int shift4 = !!(y >> 2) << 1;
+  y = y >> shift4;
 
-  int move5 = !!(y >> 1);
-  y = y >> move5;
+  int shift5 = !!(y >> 1);
+  y = y >> shift5;
 
-  int move6 = y;
-  return move1 + move2 + move3 + move4 + move5 + move6 + 1;
+  int shift6 = y;
+  return shift1 + shift2 + shift3 + shift4 + shift5 + shift6 + 1;
 }
 //float
 /* 
