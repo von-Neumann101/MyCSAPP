@@ -225,7 +225,7 @@ int isLessOrEqual(int x, int y) {
   int b = (y >> 31);
   int mius = x + (~y + 1); // y = 100000000000000爆炸，小于0
   int ms = (mius >> 31);
-  return (a ^ b & a) | (~(a ^ b) & ~ms);
+  return ((a ^ b) & a) | (~(a ^ b) & ~ms);
 }
 //4
 /* 
@@ -237,15 +237,15 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return !(x ^ 0x0);
+  return ~(x ^ 0x0);
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
- *  Examples: howManyBits(12) = 5
+ *  Examples: howManyBits(12) = 5 01100
  *            howManyBits(298) = 10
- *            howManyBits(-5) = 4
- *            howManyBits(0)  = 1
- *            howManyBits(-1) = 1
+ *            howManyBits(-5) = 4 1011
+ *            howManyBits(0)  = 1 0
+ *            howManyBits(-1) = 1 1
  *            howManyBits(0x80000000) = 32
  *  Legal ops: ! ~ & ^ | + << >>
  *  Max ops: 90
@@ -254,23 +254,23 @@ int logicalNeg(int x) {
 int howManyBits(int x) {
   int y = x ^ (x >> 31);
   
-  int mo1 = !!(y >> 16) << 4;
-  y = y >> mo1;
+  int move1 = !!(y >> 16) << 4;
+  y = y >> move1;
 
-  int mo2 = !!(y >> 8) << 3;
-  y = y >> mo2;
+  int move2 = !!(y >> 8) << 3;
+  y = y >> move2;
 
-  int mo3 = !!(y >> 4) << 2;
-  y = y >> mo3;
+  int move3 = !!(y >> 4) << 2;
+  y = y >> move3;
 
-  int mo4 = !!(y >> 2) << 1;
-  y = y >> mo4;
+  int move4 = !!(y >> 2) << 1;
+  y = y >> move4;
 
-  int mo5 = !!(y >> 1);
-  y = y >> mo5;
+  int move5 = !!(y >> 1);
+  y = y >> move5;
 
-  int mo6 = y;
-  return mo1 + mo2 + mo3 + mo4 + mo5 + mo6 + 1;
+  int move6 = y;
+  return move1 + move2 + move3 + move4 + move5 + move6 + 1;
 }
 //float
 /* 
