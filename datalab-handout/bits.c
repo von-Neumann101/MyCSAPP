@@ -166,7 +166,7 @@ int tmin(void) {
  */
 int isTmax(int x) {
   //return x == 2^31-1
-  return !((x + 1) ^ x);
+  return !((x + 1) ^ (~x)) & !!(x + 1);
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -177,7 +177,10 @@ int isTmax(int x) {
  *   Rating: 2
  */
 int allOddBits(int x) {
-  return !(((x >> 1) | x) + 1);
+  int mask = 0xAA;
+  mask = mask | (mask << 8);
+  mask = mask | (mask << 16);
+  return !((x & mask) ^ mask);
 }
 /* 
  * negate - return -x 
@@ -200,7 +203,11 @@ int negate(int x) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return !(0x3 ^ (x >> 1));
+  // 9 -> 1001
+  int end = 0xF & x;
+  int mius = end + (~ 9 + 1);
+  int sign = (mius >> 31) & 1;
+  return !(0x3 ^ (x >> 4)) & (sign | !(end ^ 9));
 }
 /* 
  * conditional - same as x ? y : z 
@@ -221,11 +228,11 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  int a = (x >> 31); // 大于0 -> 0, 小于0 -> 1
-  int b = (y >> 31);
-  int mius = x + (~y + 1); // y = 100000000000000爆炸，小于0
-  int ms = (mius >> 31);
-  return ((a ^ b) & a) | (~(a ^ b) & ~ms);
+  int a = (x >> 31) & 1; // 大于0 -> 0, 小于0 -> 1
+  int b = (y >> 31) & 1;
+  int mius = y + (~x + 1);
+  int ms = (mius >> 31) & 1;
+  return ((a ^ b) & a) | (!(a ^ b) & !ms);//xy异号并且x为正，xy同号并且相减的符号小于0
 }
 //4
 /* 
