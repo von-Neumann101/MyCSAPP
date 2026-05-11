@@ -334,7 +334,7 @@ int floatFloat2Int(unsigned uf) {
   if (E >= 23) {
     M <<= (E - 23);
   } else {
-    M >>= (E - 23);
+    M >>= (23 - E);
   }
   
   if (sign == 1) return -M;
