@@ -349,10 +349,11 @@ int floatFloat2Int(unsigned uf) {
  *   Max ops: 30 
  *   Rating: 4
  */
-unsigned floatPower2(int x) {
-  if ((x << 1) >> 24 == (1 << 8)) return uf;
-  unsigned sign = ((x >> 31) & 1) << 31;
-  unsigned exp = ((((x << 1) >> 24) + 1) << 24) >> 1;
-  unsigned frac = (x << 9) >> 9;
-  return sign + exp + frac;
+unsigned floatPower2(int x) {//return 1.0 * 2^x
+  unsigned exp = x + 127;
+  unsigned frac = 0;
+  if (exp < -23) return 0;
+  if (exp < 1) return 1 << exp;
+  if (exp > 255) return 0x80000000u;
+  return exp << 23;
 }
