@@ -294,7 +294,7 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  if ((uf << 1) >> 24 == 0xFF)) return uf;
+  if ((uf << 1) >> 24 == 0xFF) return uf;
   unsigned sign = ((uf >> 31) & 1) << 31;
   unsigned exp = ((((uf << 1) >> 24) + 1) << 24) >> 1;
   unsigned frac = (uf << 9) >> 9;
