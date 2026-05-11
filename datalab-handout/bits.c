@@ -355,9 +355,8 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 4
  */
 unsigned floatPower2(int x) {//return 1.0 * 2^x
-  unsigned exp = x + 127;
-  unsigned frac = 0;
-  if (exp < -23) return 0;
+  int exp = x + 127; //!!!!!!!!
+  if (exp < -22) return 0;
   if (exp < 1) return 1 << exp;
   if (exp > 255) return 0x80000000u;
   return exp << 23;
