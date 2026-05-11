@@ -296,6 +296,11 @@ int howManyBits(int x) {
 unsigned floatScale2(unsigned uf) {
   if ((uf << 1) >> 24 == 0xFF) return uf;
   unsigned sign = ((uf >> 31) & 1) << 31;
+  if (((uf << 1) >> 24) == 0) {
+    unsigned frac = (uf << 9) >> 9;
+    frac <<= 1;
+    return sign + frac;
+  }
   unsigned exp = ((((uf << 1) >> 24) + 1) << 24) >> 1;
   unsigned frac = (uf << 9) >> 9;
   return sign + exp + frac;
