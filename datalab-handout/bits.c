@@ -358,6 +358,6 @@ unsigned floatPower2(int x) {//return 1.0 * 2^x
   int exp = x + 127; //!!!!!!!!
   if (exp < -22) return 0;
   if (exp < 1) return 1 << exp;
-  if (exp > 255) return 0x80000000u;
+  if (exp > 254) return 0x7f800000;
   return exp << 23;
 }
