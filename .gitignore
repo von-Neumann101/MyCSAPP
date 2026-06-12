@@ -6,3 +6,6 @@ datalab-handout/*
 !bomb/
 bomb/*
 !bomb/answer.md
+!target1/
+target1/*
+!target1/phase1.txt
