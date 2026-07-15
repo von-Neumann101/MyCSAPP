@@ -8,5 +8,5 @@ bomb/*
 !bomb/answer.md
 !target1/
 target1/*
-!target1/phase1.txt
-!target1/phase2.txt
+!target1/answer/phase1.txt
+!target1/answer/phase2.txt
