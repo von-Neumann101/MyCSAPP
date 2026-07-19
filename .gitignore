@@ -9,5 +9,5 @@ bomb/*
 !target1/
 target1/*
 !target1/answer/
-!target1/answer/phase1.txt
-!target1/answer/phase2.txt
+!target1/answer/phase1
+!target1/answer/phase2
