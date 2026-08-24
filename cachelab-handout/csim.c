@@ -183,8 +183,9 @@ static AccessResult access_cache(
     /*
      * TODO 3：判断是否 hit
      */
-    for (int i = 0; i < cache->E; i++) {
-        CacheLine *line = &(set->lines + i);
+    int e = cache->E
+    for (int i = 0; i < e; i++) {
+        CacheLine *line = set->lines + i;
         if (line->valid && tag == line->tag) {
             line->last_used = cache->clock;
             RESULT_MISS.RESULT_HIT = 1;
