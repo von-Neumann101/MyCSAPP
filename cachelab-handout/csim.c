@@ -193,28 +193,11 @@ static AccessResult access_cache(
 
     /*
      * TODO 4：处理 miss，但 set 中还有空 line
-     *
-     * 如果没有 hit：
-     *     1. miss_count 增加
-     *     2. 寻找 valid == 0 的 line
-     *
-     * 如果找到空 line：
-     *     1. 将 valid 设置为 1
-     *     2. 保存新的 tag
-     *     3. 更新 last_used
-     *     4. 返回 RESULT_MISS
      */
 
 
     /*
      * TODO 5：处理 eviction
-     *
-     * 如果没有 hit，而且没有空 line：
-     *     1. eviction_count 增加
-     *     2. 按 LRU 找到最久没有访问的 line
-     *     3. 替换它的 tag
-     *     4. 更新 last_used
-     *     5. 返回 RESULT_MISS_EVICTION
      */
 
 
