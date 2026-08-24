@@ -133,7 +133,7 @@ static unsigned long long get_set_index(
     (void)cache;
     (void)address;
 
-    return 0;
+    return (address >> cache->b) & (0x1 << cache->s - 1);
 }
 
 
