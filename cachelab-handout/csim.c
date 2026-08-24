@@ -188,6 +188,8 @@ static AccessResult access_cache(
         if (line->valid && tag == line->tag) {
             line->last_used = cache->clock;
             RESULT_MISS.RESULT_HIT = 1;
+            cache->hit_count++;
+            return RESULT_MISS;
         }
     }
 
