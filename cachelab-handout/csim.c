@@ -182,19 +182,14 @@ static AccessResult access_cache(
 
     /*
      * TODO 3：判断是否 hit
-     *
-     * 遍历当前 set 中的 E 条 cache line。
-     *
-     * 如果存在：
-     *     valid == 1
-     *     tag 与当前地址的 tag 相同
-     *
-     * 则：
-     *     1. hit_count 增加
-     *     2. 更新该 line 的 last_used
-     *     3. 返回 RESULT_HIT
      */
-
+    for (int i = 0; i < cache->E; i++) {
+        CacheLine *line = &(set->lines + i);
+        if (line->valid && tag == line->tag) {
+            line->last_used = cache->clock;
+            RESULT_MISS.RESULT_HIT = 1;
+        }
+    }
 
     /*
      * TODO 4：处理 miss，但 set 中还有空 line
