@@ -180,23 +180,16 @@ static AccessResult access_cache(
      */
     cache->clock++;
 
-    /*
-     * TODO 3：判断是否 hit
-     */
-    int e = cache->E
+    int e = cache->E;
     for (int i = 0; i < e; i++) {
         CacheLine *line = set->lines + i;
         if (line->valid && tag == line->tag) {
             line->last_used = cache->clock;
-            RESULT_MISS.RESULT_HIT = 1;
             cache->hit_count++;
             return RESULT_HIT;
         }
     }
 
-    /*
-     * TODO 4：处理 miss，但 set 中还有空 line
-     */
     for (int i = 0; i < e; i++) {
         CacheLine *line = set->lines + i;
         if (!line->valid) {
@@ -208,10 +201,7 @@ static AccessResult access_cache(
         }
     }
 
-    /*
-     * TODO 5：处理 eviction
-     */
-    int LRU[e], replace, min = 0x3f3f3f3f;
+    int replace, min = 0x3f3f3f3f;
     for (int i = 0; i < e; i++) {
         CacheLine *line = set->lines + i;
         if (line->last_used <= min) {
@@ -219,10 +209,11 @@ static AccessResult access_cache(
             replace = i;
         }
     }
-    CacheLine replace_line = *(set->lines + replace);
-    replace_line.tag = tag;
-    replace_line.last_used = cache->clock;
+    CacheLine *replace_line = &(set->lines + replace);
+    replace_line->tag = tag;
+    replace_line->last_used = cache->clock;
     cache->eviction_count++;
+    cache->miss_count++;
     return RESULT_MISS_EVICTION;
 }
 
