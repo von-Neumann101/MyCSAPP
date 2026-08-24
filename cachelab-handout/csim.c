@@ -190,29 +190,40 @@ static AccessResult access_cache(
             line->last_used = cache->clock;
             RESULT_MISS.RESULT_HIT = 1;
             cache->hit_count++;
-            return RESULT_MISS;
+            return RESULT_HIT;
         }
     }
 
     /*
      * TODO 4：处理 miss，但 set 中还有空 line
      */
-
+    for (int i = 0; i < e; i++) {
+        CacheLine *line = set->lines + i;
+        if (!line->valid) {
+            line->tag = tag;
+            line->valid = 1;
+            line->last_used = cache->clock;
+            cache->miss_count++;
+            return RESULT_MISS;
+        }
+    }
 
     /*
      * TODO 5：处理 eviction
      */
-
-
-    /*
-     * 下面只是为了让未完成的框架能够通过编译。
-     * 完成 TODO 3～5 后，应当删除这几行。
-     */
-    (void)tag;
-    (void)set;
-
-    cache->miss_count++;
-    return RESULT_MISS;
+    int LRU[e], replace, min = 0x3f3f3f3f;
+    for (int i = 0; i < e; i++) {
+        CacheLine *line = set->lines + i;
+        if (line->last_used <= min) {
+            min = line->last_used;
+            replace = i;
+        }
+    }
+    CacheLine replace_line = *(set->lines + replace);
+    replace_line.tag = tag;
+    replace_line.last_used = cache->clock;
+    cache->eviction_count++;
+    return RESULT_MISS_EVICTION;
 }
 
 
