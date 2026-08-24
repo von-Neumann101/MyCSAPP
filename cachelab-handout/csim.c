@@ -155,7 +155,7 @@ static unsigned long long get_tag(
     (void)cache;
     (void)address;
 
-    return 0;
+    return address >> (cache->s + cache->b);
 }
 
 
