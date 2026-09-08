@@ -133,7 +133,7 @@ static unsigned long long get_set_index(
     (void)cache;
     (void)address;
 
-    return (address >> cache->b) & (0x1 << cache->s - 1);
+    return (address >> cache->b) & ((0x1 << cache->s) - 1);
 }
 
 
@@ -209,7 +209,7 @@ static AccessResult access_cache(
             replace = i;
         }
     }
-    CacheLine *replace_line = &(set->lines + replace);
+    CacheLine *replace_line = set->lines + replace;
     replace_line->tag = tag;
     replace_line->last_used = cache->clock;
     cache->eviction_count++;
