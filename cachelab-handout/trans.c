@@ -23,7 +23,7 @@ void trans(int M, int N, int A[N][M], int B[M][N]);
 char transpose_submit_desc[] = "Transpose submission";
 void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 {
-    if (M == 32) {
+    if (M == 32 && N == 32) {
         int i, j;
         for (i = 0; i < N; i += 8) {
             for (j = 0; j < M; j += 8) {
@@ -49,7 +49,93 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
         }
         return;
     }
-    trans(M, N, A, B);
+
+    if (M == 64 && N== 64) {
+        //注意题目要求不能写太多的int
+        int i, j, k, l;
+        for (i = 0; i < N; i += 8) {
+            for (j = 0; j < M; j += 8) {
+                int a0, a1, a2, a3, a4, a5, a6, a7;
+                for (k = i; k < i + 4; k++) {
+                    //读取A按照4x8读取,更好利用空间局部性
+                    a0 = A[k][j];
+                    a1 = A[k][j + 1];
+                    a2 = A[k][j + 2];
+                    a3 = A[k][j + 3];
+                    a4 = A[k][j + 4];
+                    a5 = A[k][j + 5];
+                    a6 = A[k][j + 6];
+                    a7 = A[k][j + 7];
+
+                    //写入B按照4x4写入,因为冲突周期是4行
+                    B[j][k] = a0;
+                    B[j + 1][k] = a1;
+                    B[j + 2][k] = a2;
+                    B[j + 3][k] = a3;
+                    //这里把B的4行8列放入了cache
+                    //如果继续往下行写的话,会挤掉后面的列
+
+                    //先暂时利用cahce把应当填入下4行的数据放进去
+                    B[j][k + 4] = a4;
+                    B[j + 1][k + 4] = a5;
+                    B[j + 2][k + 4] = a6;
+                    B[j + 3][k + 4] = a7;
+                }
+
+                for (l = j; l < j + 4; ++l) {
+                    //刚刚B的右上还在缓存里,为什么不先取B呢?
+                    a0 = A[i + 4][l];
+                    a1 = A[i + 5][l];
+                    a2 = A[i + 6][l];
+                    a3 = A[i + 7][l];
+                    
+                    //取行和取列 matters
+                    a4 = B[l][i + 4];
+                    a5 = B[l][i + 5];
+                    a6 = B[l][i + 6];
+                    a7 = B[l][i + 7];
+                    
+                    //左下的A放到B的右上
+                    B[l][i + 4] = a0;
+                    B[l][i + 5] = a1;
+                    B[l][i + 6] = a2;
+                    B[l][i + 7] = a3;
+
+                    //原来在B的右上的数据放到B的左下
+                    B[l + 4][i] = a4;
+                    B[l + 4][i + 1] = a5;
+                    B[l + 4][i + 2] = a6;
+                    B[l + 4][i + 3] = a7;
+                }
+
+                for (k = i; k < i + 8; k++) {
+                    a0 = A[k][j + 4];
+                    a1 = A[k][j + 5];
+                    a2 = A[k][j + 6];
+                    a3 = A[k][j + 7];
+
+                    B[j + 4][k] = a0;
+                    B[j + 5][k] = a1;
+                    B[j + 6][k] = a2;
+                    B[j + 7][k] = a3;
+                }
+            }
+        }
+        return;
+    }
+
+    if (M == 61 && N == 67) {
+        for (i = 0; i < N; i += 16) {
+            for (j = 0; j < M; j += 16) {
+                for (k = i; k < i + 16 && k < N; ++k) {
+                    for (l = j; l < j + 16 && l < M; ++l) {
+                        B[l][k] = A[k][l];
+                    }
+                }
+            }
+        }
+        return;
+    }
 
 }
 
