@@ -125,6 +125,7 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
     }
 
     if (M == 61 && N == 67) {
+        int i, j, k, l;
         for (i = 0; i < N; i += 16) {
             for (j = 0; j < M; j += 16) {
                 for (k = i; k < i + 16 && k < N; ++k) {
